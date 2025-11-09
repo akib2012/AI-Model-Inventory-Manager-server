@@ -34,13 +34,41 @@ async function run() {
     // clreate collections here
     const db = client.db('ai_model_inventory_manager');
     const modelscollections = db.collection('models');
+    const userscollections = db.collection('users');
 
 
-    app.get('/models', async(req,res) => {
-        const cursor = modelscollections.find();
+    /* here the models get api: */
+    app.get('/recent-model', async(req,res) => {
+        const cursor = modelscollections.find().sort({createdAt: -1}).limit(6);
         const  result  = await cursor.toArray();
         res.send(result);
     })
+
+
+    // detils page here: 
+
+    app.get('/models/:id', async(req,res) => {
+        const id = req.params.id;
+        const query = {id: id};
+        const  result = await modelscollections.findOne(query);
+        res.send(result);
+        
+        
+
+    })
+
+
+
+
+    /* ........ user related api here.......... */
+
+    app.post('/users', async(req, res) => {
+        const user = req.body;
+        const result  = await userscollections.insertOne(user);
+        res.send(result);
+    })
+
+    
 
 
 
