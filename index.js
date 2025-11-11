@@ -38,6 +38,24 @@ async function run() {
 
 
     /* here the models get api: */
+
+    app.get('/models', async(req, res) => {
+        const cursor = modelscollections.find();
+        const result = await cursor.toArray(cursor);
+        res.send(result);
+    })
+
+    // add model here
+
+    app.post('/models', async(req,res) => {
+        const newmodel = req.body;
+        const result = await modelscollections.insertOne(newmodel);
+        res.send(result);
+    })
+
+    
+
+
     app.get('/recent-model', async(req,res) => {
         const cursor = modelscollections.find().sort({createdAt: -1}).limit(6);
         const  result  = await cursor.toArray();
@@ -68,7 +86,7 @@ async function run() {
         res.send(result);
     })
 
-    
+
 
 
 
